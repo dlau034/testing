@@ -2,15 +2,27 @@
 
 <html>
   <head>
+  	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
   	<title>David's Testing App</title>
-    <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
-    	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>  
+    <script src='firebase.js'></script>
+    <script src="jquery-1.11.1.min.js"></script>  
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<style>
+		input {
+			margin-bottom: 10px;
+		}
+	</style>
   
   </head>
   <body>
+  	<div class="container">
+  	<h1>David's App</h1>
     <div id='messagesDiv'></div>
-    <input type='text' id='nameInput' placeholder='Name'>
-    <input type='text' id='messageInput' placeholder='Message'>
+    <input class="form-control" type='text' id='nameInput' placeholder='Name'>
+    <input class="form-control" type='text' id='messageInput' placeholder='Message'>
     <script>
 
     var myDataRef = new Firebase('https://incandescent-fire-1261.firebaseIO.com/');
@@ -31,10 +43,11 @@
 
       function displayChatMessage(name, text) {
         $('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
-        
+
         $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
       };
 
     </script>
+    </div>
   </body>
 </html>
