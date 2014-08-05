@@ -1,7 +1,7 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html>
   <head>
+<<<<<<< HEAD
   	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -23,15 +23,42 @@
     <div id='messagesDiv'></div>
     <input class="form-control" type='text' id='nameInput' placeholder='Name'>
     <input class="form-control" type='text' id='messageInput' placeholder='Message'>
+=======
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">      
+  	<title>David's Testing App</title>
+    <script src='js/firebase.js'></script>
+    <script src="js/jquery-1.11.1.min.js"></script>  
+    <script src="https://cdn.firebase.com/js/simple-login/1.6.1/firebase-simple-login.js"></script>    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    input {
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+  </style>
+
+  </head>
+  <body>
+    <div class="container">
+    <h1>Welcome to David's Chat</h1> 
+    <a class="btn btn-success btn-lg" href="#" id="fblogin">Facebook Login</a>
+    <a class="btn btn-success btn-lg" href="#" id="fblogout">Logout</a>
+    <div id='messagesDiv'></div>
+    <input class="form-control" type='text' id='nameInput' placeholder='Enter your alias'>
+    <input class="form-control" type='text' id='messageInput' placeholder='Enter your message'>
+>>>>>>> 74d44faaae8f360f434e391bc83714bb8c1b574a
     <script>
 
     var myDataRef = new Firebase('https://incandescent-fire-1261.firebaseIO.com/');
 
-	$('#messageInput').keypress(function (e) {
+     $('#messageInput').keypress(function (e) {
         if (e.keyCode == 13) {
           var name = $('#nameInput').val();
           var text = $('#messageInput').val();
-			myDataRef.push({name: name, text: text});
+  		myDataRef.push({name: name, text: text});
           $('#messageInput').val('');
         }
       });
@@ -48,6 +75,67 @@
       };
 
     </script>
+<<<<<<< HEAD
+=======
+    
+    <script>
+      var yourName  = "";
+      var isNewUser = true;
+      
+      var myRef = new Firebase("https://fb-logindlau.firebaseio.com");
+
+      var auth = new FirebaseSimpleLogin(myRef, function(error, user) {
+        if (error) {
+          // an error occurred while attempting login
+          console.log(error);
+        } else if (user) {
+          // user authenticated with Firebase
+          
+          console.log("User ID: " + user.uid + ", Provider: " + user.provider);
+          console.log(user);
+
+          yourName = user.displayName;
+          console.log(yourName);
+          $("#nameInput").val(yourName);
+
+          alert("Ok you've logged in!");
+          $(".container").prepend('<h2 id="nameTag">' + "Logged In as: " + yourName + '</h2>');
+
+          if( isNewUser ) {
+            // save new user's profile into Firebase so we can
+            // list users, use them in security rules, and show profiles
+            myRef.child('users').child(user.uid).set({
+              displayName: user.displayName,
+              provider: user.provider,
+              provider_id: user.id
+            });
+          }        
+        } else {
+          // user is logged out
+          console.log("Not logged in");          
+        }
+      });
+
+      
+      
+
+    $(function(){
+      $("#fblogin").click(function(){
+        auth.login('facebook', {
+          rememberMe: true,
+          scope: 'email,user_likes'
+        });        
+      });      
+
+      $("#fblogout").click(function(){
+        auth.logout();        
+        $("#nameTag").remove();
+        alert("Ok you've logged out!");
+      });    
+    });
+
+    </script>
+>>>>>>> 74d44faaae8f360f434e391bc83714bb8c1b574a
     </div>
   </body>
 </html>
