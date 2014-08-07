@@ -2,50 +2,77 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">      
-  	<title>David's Testing App</title>
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  	<title>David's Chat App</title>
     <script src='js/firebase.js'></script>
     <script src="js/jquery-1.11.1.min.js"></script>  
-    <script src="https://cdn.firebase.com/js/simple-login/1.6.1/firebase-simple-login.js"></script>    
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/firebase-simple-login.js"></script>    
 
-  <style>
-    input {
-      margin-bottom: 10px;
-      margin-top: 10px;
-    }
-  </style>
+    <link rel="stylesheet" href="css/ratchet.min.css">
+    <link rel="stylesheet" href="css/ratchet-theme-ios.min.css">
 
+    <!-- Custom Styles -->
+
+    <link rel="stylesheet" href="css/app.css">  
   </head>
+
   <body>
-    <div class="container">
-    <h1>Welcome to David's Chat</h1> 
-    <a class="btn btn-success btn-lg" href="#" id="fblogin">Facebook Login</a>
-    <a class="btn btn-success btn-lg" href="#" id="fblogout">Logout</a>
-    <div id='messagesDiv'></div>
-    <input class="form-control" type='text' id='nameInput' placeholder='Enter your alias'>
-    <input class="form-control" type='text' id='messageInput' placeholder='Enter your message'>
-    <script>
+
+    <header class="bar bar-nav">
+      <button class="btn btn-primary btn-outlined pull-left" href="#" id="fblogin">Facebook
+      </button>
+      <button class="btn btn-primary btn-outlined pull-right" href="#" id="fblogout">Logout
+      </button>
+      <h1 class="title">David's Chat</h1>
+    </header>
+
+    <div id="loginAs" class="bar"></div>
+
+      <div class="content"> 
+        <div class="card custom_margin">
+          <ul id='messagesDiv' class="table-view"></ul>
+        </div>
+      </div>
+
+      <div class="bar bar-footer footer_custom">
+        <form class="input-group">
+          <input type="text" id='nameInput' placeholder="Choose your Alias">
+          <input type="text" id='messageInput' placeholder="Message">
+        </form>        
+      </div>    
+
+  <script>
 
     var myDataRef = new Firebase('https://incandescent-fire-1261.firebaseIO.com/');
+
+
 
      $('#messageInput').keypress(function (e) {
         if (e.keyCode == 13) {
           var name = $('#nameInput').val();
           var text = $('#messageInput').val();
-  		myDataRef.push({name: name, text: text});
+          var timestamp = new Date().toLocaleTimeString();
+
+          console.log(timestamp)
+
+  		myDataRef.push({name: name, text: text, timestamp: timestamp});
           $('#messageInput').val('');
         }
       });
 
 		myDataRef.on('child_added', function(snapshot) {
 			var message = snapshot.val();
-	  		displayChatMessage(message.name, message.text);
+	  		displayChatMessage(message.name, message.text, message.timestamp);
 		});
 
-      function displayChatMessage(name, text) {
-        $('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
+      function displayChatMessage(name, text, timestamp) {
+        $('<li class="table-view-cell"/>').text(text).append("<span>" + timestamp + "</span>").prepend($('<strong/>').text(name+': ')).prependTo($('#messagesDiv'));
         
         $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
       };
@@ -72,8 +99,9 @@
           console.log(yourName);
           $("#nameInput").val(yourName);
 
-          alert("Ok you've logged in!");
-          $(".container").prepend('<h2 id="nameTag">' + "Logged In as: " + yourName + '</h2>');
+          // alert("Ok you've logged in!");
+          $("#loginAs").show().addClass('bar-header-secondary')
+          $("#loginAs").prepend('<h5 id="nameTag">' + "Logged in as " + yourName + '</h5>');
 
           if( isNewUser ) {
             // save new user's profile into Firebase so we can
@@ -103,7 +131,7 @@
 
       $("#fblogout").click(function(){
         auth.logout();        
-        $("#nameTag").remove();
+        $("#loginAs").hide().removeClass('bar-header-secondary');
         alert("Ok you've logged out!");
       });    
     });

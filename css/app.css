@@ -1,0 +1,23 @@
+input {
+     /*margin-bottom: 10px;*/
+     /*margin-top: 10px;*/
+}
+
+.footer_custom {
+	height: 85px;
+	padding: 0;
+}
+
+.custom_margin {
+	margin-bottom: 100px!important;
+}
+
+#messagesDiv span {
+	display: block;
+	font-size: 12px;
+}
+
+#loginAs {
+	text-align: center;
+	display: none;
+}
